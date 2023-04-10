@@ -60,6 +60,7 @@ class site(models.Model):
     tpro_file_name = models.CharField(max_length=150, blank=True, null=True)
     last_reading_received_at = models.DateTimeField(blank=True,null=True)
     last_reading = models.TextField(null=True, blank=True)
+    last_readings = JSONField(default=dict)
     total_params = JSONField(default=list)
 
     site_lattitude = models.CharField(max_length=100, blank=True, null=True)

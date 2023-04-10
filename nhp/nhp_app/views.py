@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from nhp_app.models import *
+
+import pandas as pd
 # from ..models.master_models import designation_Master
 
 USER_LOGIN_MAP = {
@@ -163,7 +165,36 @@ def update_site_detail(request, uuid):
 def site_data(request, uuid):
     if request.method == 'GET':
         siteObj = site.objects.get(uuid=uuid)
-        return render(request,'admin/bin_serv/site_data.html', {'siteObj':siteObj})
+        readings_obj = readings_2023.objects.filter(site_id=siteObj).order_by('-timestamp')
+
+        df = pd.DataFrame(list(readings_obj.values()))
+        df = df.drop("uuid", axis=1)
+        df = df.drop("site_id_id", axis=1)
+        df = df.drop("created_at", axis=1)
+
+        df = pd.concat([df.drop(['readings'], axis=1), df['readings'].apply(pd.Series)], axis=1)
+
+        df1 = df.to_dict('records')
+        print('df >>> \n',df1)
+
+        cols = list(df.columns.values)
+        print('cols >>> \n',cols,type(cols))
+        new_cols = []
+        for col in cols:
+            if col != "timestamp":
+                new_cols.append(col)
+        print('new_cols >>> \n',new_cols)
+
+        return render(request,'admin/bin_serv/site_data.html', {'siteObj':siteObj,'readings_obj':df1,'cols':new_cols})
+
+
+
+@login_required(login_url='/')
+def projects_list(request):
+    if request.method == 'GET':
+        project_obj = project_master.objects.all()
+        return render(request,'admin/bin_serv/project-list.html', {'project_obj':project_obj})
+
 
 
 @login_required(login_url='/')
@@ -180,7 +211,12 @@ def admin_dashboard(request):
     if request.method == 'GET':
         if request.user.is_superuser:
             sites = site.objects.all()
-            return render(request,'admin/dashboard.html', {'sites':sites})
+            non_tpro_sites = len(site.objects.filter(tpro_prefix = None) | site.objects.filter(tpro_prefix = ''))
+            tpro_sites = len(sites) - non_tpro_sites
+
+            non_configured_sites = len(site.objects.filter(last_reading = None) | site.objects.filter(last_reading = ''))
+            configured_sites = len(sites) - non_configured_sites
+            return render(request,'admin/dashboard.html', {'sites':sites,'tpro_sites':tpro_sites,'non_tpro_sites':non_tpro_sites,'non_configured_sites':non_configured_sites,'configured_sites':configured_sites})
         else:
             # return redirect('admin_dashboard')
             return render(request,'authentication/login.html')

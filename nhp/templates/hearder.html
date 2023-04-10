@@ -21,14 +21,14 @@
                 {% endif %}
             </span>
             <span> <span class="account-user-name">{{request.user.first_name}} {{request.user.last_name}}</span>
-                <span class="account-position" title="Admin user"> <strong>Admin</strong> | <small title="Acess to manage all state NHP"><span class="text-primary"><strong>All Module Access</strong></span></small></span> 
+                <span class="account-position" title="Admin user"> <strong>Admin</strong> | <small title="Acess to manage all state NHP"><span class="text-primary"><strong>All Access</strong></span></small></span> 
             </span>
-            {% else %}
+            {% comment %} {% else %}
             <span class="account-user-avatar"> 
                 <img src="../../static/assets/images/logo_sm.png" alt="user-image" class="rounded-circle">
             </span>
             <span> <span class="account-user-name">18Pixels</span>
-                <span class="account-position"> Customer</span> </span>
+                <span class="account-position"> Customer</span> </span> {% endcomment %}
             {% endif %}
 
         </a>

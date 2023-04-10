@@ -4,7 +4,7 @@
  
 <head>
         <meta charset="utf-8" />
-         <title>18Pixels | Management Tool</title>
+         <title>Bin. Server Configuration Portal</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
         <meta content="Coderthemes" name="author" />
@@ -49,28 +49,25 @@
                          <div class="row">
                             <div class="col-8">
                                 <div class="page-title-box">
-                                    <h4 class="page-title">Project List</h4>
+                                    <h4 class="page-title">Related Project List</h4>
                                 </div>
                             </div>
                             <div class="col-2 pt-3" >
-                                {% if request.session.userType == 'masteR' %}
-                                <select class="form-control select2" data-toggle="select2"  id='filter-user'  data-placeholder="Filter by Year" onchange="filterByYear(this)">
-                                    <option></option>
-                                    <option value="2017">2017</option>
-                                    <option value="2018">2018</option>
-                                    <option value="2019">2019</option>
-                                    <option value="2020">2020</option>
-                                    <option value="2021">2021</option>
-                                    <option value="2022">2022</option>
+                                {% comment %} {% if request.session.userType == 'masteR' %} {% endcomment %}
+                                <select class="form-control select2" data-toggle="select2"  id='filter-user'  data-placeholder="Filter by Project" onchange="filterByYear(this)">
+                                    <option class="d-none" value="">select a project</option>
+                                    {% for proj in project_obj %}
+                                        <option value="{{proj.uuid}}">{{proj.name}}</option>
+                                    {% endfor %}
                                 </select>
-                                {% endif %}
+                                {% comment %} {% endif %} {% endcomment %}
                             </div>
                             <div class="col-2 text-end pt-3">
-                            {% if request.session.userType == 'masteR' %}
-                                <a href="{% url 'add_project' %}" class="btn btn-danger   mb-3"><i class="mdi mdi-plus"></i> Create Project</a>
-                            {% elif request.session.userType == 'masteR' or request.session.userType == 'teacheR' %}
-                                 <a href="{% url 'create_module' %}" class="btn btn-primary   mb-3 mr-3"><i class="mdi mdi-plus"></i> Add Modules</a>
-                            {% endif %}
+                            {% comment %} {% if request.session.userType == 'masteR' %} {% endcomment %}
+                                <a href="" class="btn btn-danger   mb-3"><i class="mdi mdi-plus"></i> Create Project</a>
+                            {% comment %} {% elif request.session.userType == 'masteR' or request.session.userType == 'teacheR' %} {% endcomment %}
+                                 {% comment %} <a href="{% url 'create_module' %}" class="btn btn-primary   mb-3 mr-3"><i class="mdi mdi-plus"></i> Add Modules</a>
+                            {% endif %} {% endcomment %}
                             </div>
                             <hr>
                         </div>     

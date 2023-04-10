@@ -4,7 +4,7 @@
  
 <head>
         <meta charset="utf-8" />
-        <title>Bin. Server Configuration Portal</title>
+        <title>BinaryBridge</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
         <meta content="Coderthemes" name="author" />
@@ -67,7 +67,7 @@
                                                 <div class="card   m-0 border-start">
                                                     <div class="card-body text-center">
                                                       <a href="#">  <i class="dripicons-user-group text-muted" style="font-size: 24px;"></i>
-                                                        <h3><span>{{total_online_emp|length|add:"-1"}}</span></h3>
+                                                        <h3><span>{{tpro_sites}}</span></h3>
                                                         <p class="text-muted font-15 mb-0"> Total Telepro Dependent Sites</p> </a>
                                                     </div>
                                                 </div>
@@ -77,7 +77,7 @@
                                                 <div class="card   m-0 border-start">
                                                     <div class="card-body text-center">
                                                        <a href="#"> <i class="dripicons-star text-muted" style="font-size: 24px;"></i>
-                                                        <h3><span>{{total_upcoming_event|length}}</span></h3>
+                                                        <h3><span>{{non_tpro_sites}}</span></h3>
                                                         <p class="text-muted font-15 mb-0">Total Telepro Independent Sites</p> </a>
                                                     </div>
                                                 </div>
@@ -87,7 +87,7 @@
                                                 <div class="card   m-0 border-start">
                                                     <div class="card-body text-center">
                                                        <a href="#"> <i class="dripicons-user text-muted" style="font-size: 24px;"></i>
-                                                        <h3>{{total_pending_leave_request|length}} </h3>
+                                                        <h3>{{configured_sites}} </h3>
                                                         <p class="text-muted font-15 mb-0">Total Data Streaming Sites </p> </a>
                                                     </div>
                                                 </div>
@@ -96,7 +96,7 @@
                                                 <div class="card   m-0 border-start">
                                                     <div class="card-body text-center">
                                                        <a href="#"> <i class="dripicons-user text-muted" style="font-size: 24px;"></i>
-                                                        <h3>{{total_job_applications|length}} </h3>
+                                                        <h3>{{non_configured_sites}} </h3>
                                                         <p class="text-muted font-15 mb-0">Total Non Configured Sites </p> </a>
                                                     </div>
                                                 </div>
@@ -128,12 +128,13 @@
                                             <table class="table table-centered table-nowrap mb-0">
                                                 <thead>
                                                     <tr class="text-center bg-body text-white">
-                                                        <th>Related Project</th>
+                                                        <th width="150">Related Project</th>
                                                         <th width="150"><strong>Site Name</strong></th>
                                                         <th width="150">Site Code</th>
-                                                        <th width="150">Device Location</th>
-                                                        <th width="300">Telepro Prefix & Filename</th>
+                                                        {% comment %} <th width="150">Device Location</th> {% endcomment %}
+                                                        <th width="250">Telepro Prefix & Filename</th>
                                                         <th width="150">Last Data Timestamp</th>
+                                                        <th width="250">Last Data Received</th>
                                                         <th width="150">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -150,30 +151,27 @@
                                                             </td>
                                                             <td> <h5 class="font-14 my-1"><a href="#" class="text-primary">{% if site.name %} {{site.name|upper}}{% else %}-{% endif %}</a></h5></td>
                                                             <td> <h5 class="font-14 my-1"><a href="#" class="text-body">{{site.prefix|upper}}</a></h5></td>
-                                                            <td>
-                                                                <h5 class="font-14 mt-1 fw-normal">
-                                                                    <i class="fa-solid fa-location-dot text-info"  data-toggle="tooltip" data-placement="top" title="Lat:{{site.site_lattitude}}, Lon:{{site.sit_longitude}}"></i> &nbsp;
-                                                                    <small><strong>
-                                                                        {% if site.device_location %}{{site.device_location|upper}}{% else %}-{% endif %}
-                                                                    </strong></small>
-                                                                </h5>
-                                                            </td> 
                                                             <td>    
                                                                 {% if site.tpro_prefix %}
-                                                                    <small><strong class="text-primary">{{site.tpro_prefix}}</strong></small> <br>
-                                                                    {% if site.tpro_file_name %}
-                                                                        <small><strong>{{site.tpro_file_name}}</strong></small>
-                                                                    {% else %}
-                                                                        <small><strong>-</strong></small>
-                                                                    {% endif %}
+                                                                    <strong class="text-primary">{{site.tpro_prefix}}</strong>
                                                                 {% else %}
                                                                     <span class="badge badge-danger-lighten">Not Configured</span>
                                                                 {% endif %}
-                                                                {% comment %} <span class="badge badge-primary-lighten">{{allow_param|title}}</span> {% endcomment %}
                                                             </td>
                                                             <td> 
-                                                                <h5 class="font-14 mt-1 fw-normal">{% if site.last_reading_received_at %}{{site.last_reading_received_at}}{% else %}
-                                                                    <span class="badge badge-danger-lighten">NAT</span>{% endif %}</h5>
+                                                                <p class="fw-normal">{% if site.last_reading_received_at %}<small><strong>{{site.last_reading_received_at}}</strong></small>{% else %}
+                                                                    <span class="badge badge-danger-lighten">NAT</span>{% endif %}</p>
+                                                            </td> 
+                                                            <td> 
+                                                                <p class="fw-normal">
+                                                                    {% if site.last_readings %}
+                                                                        {% for param_key, param_val in site.last_readings.items %}
+                                                                            <span class="badge badge-success-lighten">{{param_key|title}} : {{param_val}}</span>
+                                                                        {% endfor %}
+                                                                    {% else %}
+                                                                        <span class="badge badge-danger-lighten">NAT</span>
+                                                                    {% endif %}
+                                                                </p>
                                                             </td> 
                                                             <td> 
                                                                 <h5 class="font-14 mt-1 fw-normal">

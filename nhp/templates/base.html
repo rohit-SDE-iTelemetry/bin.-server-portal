@@ -1,7 +1,7 @@
 {% load static %}
 <a href="/dashboard" class="logo text-center logo-light"> 
     <span class="logo-lg p-2"> 
-        <p style="font-size:17px;font-weight:900;text-decoration:underline;">Bin. Server Conf. Portal</p>
+        <p style="font-size:17px;font-weight:900;text-decoration:underline;">BinaryBridge</p>
     </span> 
     <span class="logo-sm"> 
         <img src="{% static 'assets/images/favicon.ico' %}" alt="" height="25"> 
@@ -30,11 +30,16 @@
                 </ul>
             </div>
         </li> {% endcomment %}
-        <li class="side-nav-item"> 
+        {% comment %} <li class="side-nav-item"> 
             <a  href="/" class="side-nav-link"> <i class="uil-clipboard-alt"></i> 
                 <span> Devices Configuration </span> 
             </a> 
-        </li>
+        </li> {% endcomment %}
+        <li class="side-nav-item"> 
+            <a  href="" class="side-nav-link"> <i class="uil-clipboard-alt"></i> 
+                <span>Related Projects </span> 
+            </a> 
+        </li> 
         <li class="side-nav-item"> <a data-bs-toggle="collapse" href="#sidebarEcommerce" aria-expanded="false"
             aria-controls="sidebarEcommerce" class="side-nav-link"> <i class="uil-user"></i> <span> User
                 Management </span> <span class="menu-arrow"></span> </a>
